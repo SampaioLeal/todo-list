@@ -1,12 +1,29 @@
+import { observer } from "mobx-react-lite";
 import styled from "styled-components";
+import useStore, { TodoTask } from "../store/TodoStore";
+import Task from "./Task";
 
 interface Props {
-  children: React.ReactNode;
+  onTaskClick(todo: TodoTask): void;
 }
 
-export default function TaskList({ children }: Props) {
-  return <Container>{children}</Container>;
+function TaskList({ onTaskClick }: Props) {
+  const store = useStore();
+
+  return (
+    <Container>
+      {store.todos.map((todo) => (
+        <Task
+          key={`${todo.id}`}
+          todo={todo}
+          onClick={() => onTaskClick(todo)}
+        />
+      ))}
+    </Container>
+  );
 }
+
+export default observer(TaskList);
 
 const Container = styled.div`
   width: 100%;

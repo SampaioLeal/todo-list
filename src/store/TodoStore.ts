@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx";
+import { createContext, useContext } from "react";
 
 export interface TodoTask {
   id?: number;
@@ -8,26 +9,41 @@ export interface TodoTask {
 }
 
 class TodoStore {
+  todos: TodoTask[] = [];
+
   constructor() {
     makeAutoObservable(this);
   }
 
-  todos: TodoTask[] = [];
-
   addTodo(todo: TodoTask) {
-    const newID = (this.todos[this.todos.length - 1]?.id || 0) + 1;
+    const newTodos = [...this.todos];
+    const newID = (newTodos[this.todos.length - 1]?.id || 0) + 1;
 
-    this.todos.push({ ...todo, id: newID });
+    newTodos.push({ ...todo, id: newID });
+    this.todos = newTodos;
   }
 
   editTodo(todo: TodoTask) {
-    const index = this.todos.findIndex((item) => item.id === todo.id);
-    this.todos[index] = todo;
+    const newTodos = [...this.todos];
+    const index = newTodos.findIndex((item) => item.id === todo.id);
+
+    newTodos[index] = todo;
+    this.todos = newTodos;
+  }
+
+  toggleTodo(id: number, value: boolean) {
+    const newTodos = [...this.todos];
+    const index = newTodos.findIndex((item) => item.id === id);
+
+    newTodos[index].feito = value;
+    this.todos = newTodos;
   }
 }
 
 const store = new TodoStore();
 
-export default function useStore() {
-  return store;
-}
+const context = createContext(store);
+export const stateContext = { context: context, store };
+
+const useStore = (): TodoStore => useContext(stateContext.context);
+export default useStore;

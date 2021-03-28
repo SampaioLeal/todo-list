@@ -1,21 +1,38 @@
-import { Checkbox } from "@material-ui/core";
+import { observer } from "mobx-react-lite";
 import styled from "styled-components";
+import useStore, { TodoTask } from "../store/TodoStore";
+import BlackCheckbox from "./BlackCheckbox";
 
 interface Props {
-  titulo: string;
+  todo: TodoTask;
   onClick?(): void;
 }
 
-export default function Task(props: Props) {
+function Task(props: Props) {
+  const store = useStore();
+
+  function handleToggle(
+    _e: React.ChangeEvent<HTMLInputElement>,
+    checked: boolean
+  ) {
+    store.toggleTodo(props.todo.id!, checked);
+  }
+
   return (
     <Container onClick={props.onClick}>
       <Left>
-        <Checkbox onClick={(e) => e.stopPropagation()} />
-        <Title>{props.titulo}</Title>
+        <BlackCheckbox
+          checked={props.todo.feito}
+          onClick={(e) => e.stopPropagation()}
+          onChange={handleToggle}
+        />
+        <Title>{props.todo.titulo}</Title>
       </Left>
     </Container>
   );
 }
+
+export default observer(Task);
 
 const Container = styled.div`
   background-color: white;

@@ -3,7 +3,6 @@ import { useState } from "react";
 import styled from "styled-components";
 import AddButton from "../../components/AddButton";
 import FormTodo from "../../components/FormTodo";
-import Task from "../../components/Task";
 import TaskList from "../../components/TaskList";
 import useStore, { TodoTask } from "../../store/TodoStore";
 import { observer } from "mobx-react-lite";
@@ -35,15 +34,7 @@ function Home() {
 
       <Divider style={{ width: "95%", marginTop: 20 }} />
 
-      <TaskList>
-        {store.todos.map((todo) => (
-          <Task
-            key={`${todo.id}`}
-            titulo={todo.titulo}
-            onClick={() => handleTaskClick(todo)}
-          />
-        ))}
-      </TaskList>
+      <TaskList onTaskClick={handleTaskClick} />
 
       <AddButton onClick={handleAddClick} />
 

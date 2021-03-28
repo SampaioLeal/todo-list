@@ -24,4 +24,8 @@ const FabButton = styled(Fab)`
   position: absolute;
   bottom: 20px;
   right: 20px;
+
+  &:hover {
+    background-color: black;
+  }
 `;
