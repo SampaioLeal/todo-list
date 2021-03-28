@@ -17,6 +17,7 @@ export default function FormTodo(props: Props) {
     titulo: props.todo ? props.todo.titulo : "",
     descricao: props.todo ? props.todo.descricao : "",
     feito: props.todo ? props.todo.feito : false,
+    id: props.todo ? props.todo.id : undefined,
   };
 
   function validate(values: TodoTask) {
@@ -32,7 +33,11 @@ export default function FormTodo(props: Props) {
   }
 
   function handleSubmit(values: TodoTask) {
-    store.addTodo(values);
+    if (props.todo) {
+      store.editTodo(values);
+    } else {
+      store.addTodo(values);
+    }
     props.handleClose();
   }
 

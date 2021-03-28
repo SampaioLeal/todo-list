@@ -6,8 +6,9 @@ import FormTodo from "../../components/FormTodo";
 import Task from "../../components/Task";
 import TaskList from "../../components/TaskList";
 import useStore, { TodoTask } from "../../store/TodoStore";
+import { observer } from "mobx-react-lite";
 
-export default function Home() {
+function Home() {
   const store = useStore();
   const [modalState, setModalState] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState<TodoTask | null>(null);
@@ -36,7 +37,11 @@ export default function Home() {
 
       <TaskList>
         {store.todos.map((todo) => (
-          <Task titulo={todo.titulo} onClick={() => handleTaskClick(todo)} />
+          <Task
+            key={`${todo.id}`}
+            titulo={todo.titulo}
+            onClick={() => handleTaskClick(todo)}
+          />
         ))}
       </TaskList>
 
@@ -52,6 +57,8 @@ export default function Home() {
     </MuiContainer>
   );
 }
+
+export default observer(Home);
 
 const MuiContainer = styled(Container)`
   display: flex;

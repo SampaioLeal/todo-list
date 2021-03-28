@@ -19,6 +19,11 @@ class TodoStore {
 
     this.todos.push({ ...todo, id: newID });
   }
+
+  editTodo(todo: TodoTask) {
+    const index = this.todos.findIndex((item) => item.id === todo.id);
+    this.todos[index] = todo;
+  }
 }
 
 const store = new TodoStore();
