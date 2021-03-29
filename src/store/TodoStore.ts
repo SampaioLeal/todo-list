@@ -31,6 +31,11 @@ class TodoStore {
     this.todos = newTodos;
   }
 
+  deleteTodo(todo: TodoTask) {
+    const newTodos = [...this.todos].filter((item) => item.id !== todo.id);
+    this.todos = newTodos;
+  }
+
   toggleTodo(id: number, value: boolean) {
     const newTodos = [...this.todos];
     const index = newTodos.findIndex((item) => item.id === id);

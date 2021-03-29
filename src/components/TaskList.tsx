@@ -4,10 +4,11 @@ import useStore, { TodoTask } from "../store/TodoStore";
 import Task from "./Task";
 
 interface Props {
-  onTaskClick(todo: TodoTask): void;
+  onEditClick(todo: TodoTask): void;
+  onDeleteClick(todo: TodoTask): void;
 }
 
-function TaskList({ onTaskClick }: Props) {
+function TaskList({ onEditClick, onDeleteClick }: Props) {
   const store = useStore();
 
   return (
@@ -16,7 +17,8 @@ function TaskList({ onTaskClick }: Props) {
         <Task
           key={`${todo.id}`}
           todo={todo}
-          onClick={() => onTaskClick(todo)}
+          onEditClick={() => onEditClick(todo)}
+          onDeleteClick={() => onDeleteClick(todo)}
         />
       ))}
     </Container>
