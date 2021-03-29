@@ -17,7 +17,7 @@ interface Props {
 function Task(props: Props) {
   const store = useStore();
   const [rightOffset, setRightOffset] = useState(0);
-  const speed = 5;
+  const speed = 6;
   const optionsWidth = 100;
 
   function handleToggle(
@@ -49,11 +49,6 @@ function Task(props: Props) {
               panright: handleGesture,
             },
           },
-          // Tap: {
-          //   events: {
-          //     tap: props.onClick,
-          //   },
-          // },
         }}
       >
         <Container style={{ right: rightOffset }}>
@@ -63,7 +58,7 @@ function Task(props: Props) {
               onClick={(e) => e.stopPropagation()}
               onChange={handleToggle}
             />
-            <Title>{props.todo.titulo}</Title>
+            <Title done={props.todo.feito}>{props.todo.titulo}</Title>
           </Left>
         </Container>
         <Options>
@@ -105,9 +100,13 @@ const Left = styled.div`
   align-items: center;
 `;
 
-const Title = styled.h3`
+interface TitleProps {
+  done: boolean;
+}
+const Title = styled.h3<TitleProps>`
   font-size: 20px;
   font-weight: normal;
+  text-decoration: ${(props) => (props.done ? "line-through" : "none")};
 `;
 
 const Options = styled.div`

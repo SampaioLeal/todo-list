@@ -1,14 +1,15 @@
 import { Typography, Container, Divider } from "@material-ui/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import AddButton from "../../components/AddButton";
 import FormTodo from "../../components/FormTodo";
 import TaskList from "../../components/TaskList";
-import { TodoTask } from "../../store/TodoStore";
+import useStore, { TodoTask } from "../../store/TodoStore";
 import { observer } from "mobx-react-lite";
 import DeleteTodo from "../../components/DeleteTodo";
 
 function Home() {
+  const store = useStore();
   const [modalState, setModalState] = useState(false);
   const [deleteModalState, setDeleteModalState] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState<TodoTask | null>(null);
@@ -38,6 +39,11 @@ function Home() {
     setSelectedTodo(todo);
     openDeleteModal();
   }
+
+  useEffect(() => {
+    store.getLocal();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <MuiContainer style={{ position: "relative" }} maxWidth="md">

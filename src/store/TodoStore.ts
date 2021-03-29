@@ -21,6 +21,7 @@ class TodoStore {
 
     newTodos.push({ ...todo, id: newID });
     this.todos = newTodos;
+    this.sync();
   }
 
   editTodo(todo: TodoTask) {
@@ -29,11 +30,13 @@ class TodoStore {
 
     newTodos[index] = todo;
     this.todos = newTodos;
+    this.sync();
   }
 
   deleteTodo(todo: TodoTask) {
     const newTodos = [...this.todos].filter((item) => item.id !== todo.id);
     this.todos = newTodos;
+    this.sync();
   }
 
   toggleTodo(id: number, value: boolean) {
@@ -42,6 +45,25 @@ class TodoStore {
 
     newTodos[index].feito = value;
     this.todos = newTodos;
+    this.sync();
+  }
+
+  getLocal() {
+    const local = localStorage.getItem("todos");
+
+    if (local)
+      try {
+        const parsed = JSON.parse(local);
+
+        if (Array.isArray(parsed)) {
+          this.todos = parsed;
+        }
+      } catch (err) {
+        this.todos = [];
+      }
+  }
+  sync() {
+    localStorage.setItem("todos", JSON.stringify(this.todos));
   }
 }
 
