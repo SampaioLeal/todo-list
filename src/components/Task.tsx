@@ -107,6 +107,7 @@ const Title = styled.h3<TitleProps>`
   font-size: 20px;
   font-weight: normal;
   text-decoration: ${(props) => (props.done ? "line-through" : "none")};
+  color: ${(props) => (props.done ? "#8c8c8c" : "black")};
 `;
 
 const Options = styled.div`
