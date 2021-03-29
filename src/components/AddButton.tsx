@@ -1,31 +1,32 @@
-import { Fab } from "@material-ui/core";
+import { Fab, makeStyles } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import styled from "styled-components";
+import { useState } from "react";
+import FormTodo from "./FormTodo";
 
-interface Props {
-  onClick(): void;
-}
+const useStyles = makeStyles({
+  root: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+  },
+});
 
-export default function AddButton(props: Props) {
+export default function AddButton() {
+  const styles = useStyles();
+  const [modalState, setModalState] = useState(false);
+
+  function handleClick() {
+    setModalState(true);
+  }
+
   return (
-    <FabButton onClick={props.onClick}>
-      <AddIcon />
-    </FabButton>
+    <>
+      <Fab color="primary" onClick={handleClick} className={styles.root}>
+        <AddIcon />
+      </Fab>
+      {modalState ? (
+        <FormTodo open={modalState} handleClose={() => setModalState(false)} />
+      ) : null}
+    </>
   );
 }
-
-const FabButton = styled(Fab)`
-  background: black;
-
-  svg {
-    color: white;
-  }
-
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-
-  &:hover {
-    background-color: black;
-  }
-`;

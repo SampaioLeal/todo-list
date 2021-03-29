@@ -1,25 +1,51 @@
-import { Dialog, Grid, IconButton, TextField } from "@material-ui/core";
+import {
+  Button,
+  Checkbox,
+  Dialog,
+  Grid,
+  IconButton,
+  makeStyles,
+  TextField,
+} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import AddIcon from "@material-ui/icons/Add";
-import styled from "styled-components";
 import { Formik, Form } from "formik";
 import useStore, { TodoTask } from "../store/TodoStore";
-import BlackButton from "./BlackButton";
-import BlackCheckbox from "./BlackCheckbox";
 
 interface Props {
   open: boolean;
   handleClose(): void;
-  todo?: TodoTask | null;
 }
+
+const useStyles = makeStyles({
+  modalHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "10px 20px",
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    display: "flex",
+    alignItems: "center",
+  },
+  content: {
+    margin: "20px 0",
+    marginTop: 0,
+    padding: "0 20px",
+  },
+});
 
 export default function FormTodo(props: Props) {
   const store = useStore();
+  const styles = useStyles();
+  const task = store.selectedTodo;
   const initialValues = {
-    titulo: props.todo ? props.todo.titulo : "",
-    descricao: props.todo ? props.todo.descricao : "",
-    feito: props.todo ? props.todo.feito : false,
-    id: props.todo ? props.todo.id : undefined,
+    titulo: task ? task.titulo : "",
+    descricao: task ? task.descricao : "",
+    feito: task ? task.feito : false,
+    id: task ? task.id : undefined,
   };
 
   function validate(values: TodoTask) {
@@ -35,7 +61,7 @@ export default function FormTodo(props: Props) {
   }
 
   function handleSubmit(values: TodoTask) {
-    if (props.todo) {
+    if (task) {
       store.editTodo(values);
     } else {
       store.addTodo(values);
@@ -52,24 +78,25 @@ export default function FormTodo(props: Props) {
       >
         {({ values, errors, touched, handleChange }) => (
           <>
-            <ModalHeader>
-              <ModalTitle>
-                {props.todo && (
-                  <BlackCheckbox
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>
+                {task && (
+                  <Checkbox
+                    color="primary"
                     checked={values.feito}
                     name="feito"
                     onChange={handleChange}
                   />
                 )}
-                {props.todo ? "Editar" : "Nova"} tarefa
-              </ModalTitle>
+                {task ? "Editar" : "Nova"} tarefa
+              </h2>
 
               <IconButton onClick={props.handleClose}>
                 <CloseIcon />
               </IconButton>
-            </ModalHeader>
+            </div>
 
-            <Content>
+            <div className={styles.content}>
               <Form>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
@@ -98,37 +125,22 @@ export default function FormTodo(props: Props) {
                   </Grid>
 
                   <Grid item xs={12}>
-                    <BlackButton fullWidth type="submit">
-                      {!props.todo && <AddIcon />}
-                      {props.todo ? "Salvar" : "Adicionar"}
-                    </BlackButton>
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      fullWidth
+                      type="submit"
+                    >
+                      {!task && <AddIcon />}
+                      {task ? "Salvar" : "Adicionar"}
+                    </Button>
                   </Grid>
                 </Grid>
               </Form>
-            </Content>
+            </div>
           </>
         )}
       </Formik>
     </Dialog>
   );
 }
-
-const ModalHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-`;
-
-const ModalTitle = styled.h2`
-  font-size: 24px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-`;
-
-const Content = styled.div`
-  margin: 20px 0;
-  margin-top: 0;
-  padding: 0 20px;
-`;

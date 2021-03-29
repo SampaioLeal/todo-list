@@ -1,22 +1,64 @@
 import { observer } from "mobx-react-lite";
-import styled from "styled-components";
 import useStore, { TodoTask } from "../store/TodoStore";
-import BlackCheckbox from "./BlackCheckbox";
 import { Gestures } from "react-gesture-handler";
 import { useState } from "react";
-import { IconButton } from "@material-ui/core";
+import { Checkbox, IconButton, makeStyles } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import FormTodo from "./FormTodo";
+import DeleteTodo from "./DeleteTodo";
 
 interface Props {
   todo: TodoTask;
-  onEditClick(): void;
-  onDeleteClick(): void;
 }
+
+const useStyles = makeStyles({
+  container: {
+    position: "relative",
+    zIndex: 1,
+    backgroundColor: "white",
+    borderRadius: 4,
+    height: 60,
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: "0 10px",
+    boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.08)",
+  },
+  left: {
+    display: "flex",
+    alignItems: "center",
+  },
+  options: {
+    position: "relative",
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    height: 60,
+    backgroundColor: "#ececec",
+    width: "100%",
+    borderRadius: 4,
+    right: 0,
+    top: -60,
+  },
+  taskContainer: {
+    height: 90,
+  },
+  title: (props: Props) => ({
+    fontSize: 20,
+    fontWeight: "normal",
+    textDecoration: props.todo.feito ? "line-through" : "none",
+    color: props.todo.feito ? "#8c8c8c" : "black",
+  }),
+});
 
 function Task(props: Props) {
   const store = useStore();
+  const styles = useStyles(props);
   const [rightOffset, setRightOffset] = useState(0);
+  const [editModal, setEditModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const speed = 6;
   const optionsWidth = 100;
 
@@ -39,9 +81,18 @@ function Task(props: Props) {
     });
   }
 
+  function handleEditClick() {
+    setEditModal(true);
+    store.setSelectedTodo(props.todo);
+  }
+  function handleDeleteClick() {
+    setDeleteModal(true);
+    store.setSelectedTodo(props.todo);
+  }
+
   return (
-    <>
-      <GestureContainer
+    <div className={styles.taskContainer}>
+      <Gestures
         recognizers={{
           Pan: {
             events: {
@@ -51,81 +102,40 @@ function Task(props: Props) {
           },
         }}
       >
-        <Container style={{ right: rightOffset }}>
-          <Left>
-            <BlackCheckbox
+        <div className={styles.container} style={{ right: rightOffset }}>
+          <div className={styles.left}>
+            <Checkbox
+              color="primary"
               checked={props.todo.feito}
               onClick={(e) => e.stopPropagation()}
               onChange={handleToggle}
             />
-            <Title done={props.todo.feito}>{props.todo.titulo}</Title>
-          </Left>
-        </Container>
-        <Options>
-          <IconButton onClick={props.onEditClick}>
+            <h3 className={styles.title}>{props.todo.titulo}</h3>
+          </div>
+        </div>
+        <div className={styles.options}>
+          <IconButton onClick={handleEditClick}>
             <EditIcon />
           </IconButton>
-          <IconButton onClick={props.onDeleteClick}>
+          <IconButton onClick={handleDeleteClick}>
             <DeleteIcon />
           </IconButton>
-        </Options>
-      </GestureContainer>
-    </>
+        </div>
+      </Gestures>
+
+      {editModal ? (
+        <FormTodo open={editModal} handleClose={() => setEditModal(false)} />
+      ) : null}
+
+      {deleteModal ? (
+        <DeleteTodo
+          open={deleteModal}
+          handleClose={() => setDeleteModal(false)}
+          todo={store.selectedTodo!}
+        />
+      ) : null}
+    </div>
   );
 }
 
 export default observer(Task);
-
-const Container = styled.div`
-  position: relative;
-  z-index: 1;
-  background-color: white;
-  border-radius: 4px;
-  height: 60px;
-  width: 100%;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  margin-bottom: 24px;
-  padding: 0 10px;
-
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.08);
-  cursor: ${(props) => (props.onClick ? "pointer" : "normal")};
-`;
-
-const Left = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-interface TitleProps {
-  done: boolean;
-}
-const Title = styled.h3<TitleProps>`
-  font-size: 20px;
-  font-weight: normal;
-  text-decoration: ${(props) => (props.done ? "line-through" : "none")};
-  color: ${(props) => (props.done ? "#8c8c8c" : "black")};
-`;
-
-const Options = styled.div`
-  position: relative;
-
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-
-  height: 60px;
-  background-color: #ececec;
-  width: 100%;
-  border-radius: 4px;
-
-  right: 0;
-  top: -84px;
-`;
-
-const GestureContainer = styled(Gestures)`
-  position: absolute;
-`;

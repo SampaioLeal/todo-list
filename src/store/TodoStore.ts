@@ -10,9 +10,14 @@ export interface TodoTask {
 
 class TodoStore {
   todos: TodoTask[] = [];
+  selectedTodo: TodoTask | null = null;
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  setSelectedTodo(todo: TodoTask | null) {
+    this.selectedTodo = todo;
   }
 
   addTodo(todo: TodoTask) {
