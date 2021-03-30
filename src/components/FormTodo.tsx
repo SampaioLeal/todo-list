@@ -22,7 +22,7 @@ const useStyles = makeStyles({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "10px 20px",
+    padding: "0 20px",
   },
   modalTitle: {
     fontSize: 24,
@@ -102,6 +102,7 @@ export default function FormTodo(props: Props) {
                   <Grid item xs={12}>
                     <TextField
                       fullWidth
+                      color="primary"
                       name="titulo"
                       error={touched.titulo && !!errors.titulo}
                       value={values.titulo}
@@ -114,6 +115,7 @@ export default function FormTodo(props: Props) {
                   <Grid item xs={12}>
                     <TextField
                       fullWidth
+                      color="primary"
                       error={touched.descricao && !!errors.descricao}
                       value={values.descricao}
                       name="descricao"

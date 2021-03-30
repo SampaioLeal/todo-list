@@ -12,11 +12,11 @@ interface Props {
   todo: TodoTask;
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   container: {
     position: "relative",
     zIndex: 1,
-    backgroundColor: "white",
+    backgroundColor: theme.palette.background.paper,
     borderRadius: 4,
     height: 60,
     width: "100%",
@@ -36,9 +36,9 @@ const useStyles = makeStyles({
     justifyContent: "flex-end",
     alignItems: "center",
     height: 60,
-    backgroundColor: "#ececec",
+    backgroundColor: theme.palette.action.disabledBackground,
     width: "100%",
-    borderRadius: 4,
+    borderRadius: 5,
     right: 0,
     top: -60,
   },
@@ -49,9 +49,9 @@ const useStyles = makeStyles({
     fontSize: 20,
     fontWeight: "normal",
     textDecoration: props.todo.feito ? "line-through" : "none",
-    color: props.todo.feito ? "#8c8c8c" : "black",
+    color: props.todo.feito ? "#8c8c8c" : theme.palette.text.primary,
   }),
-});
+}));
 
 function Task(props: Props) {
   const store = useStore();
@@ -114,11 +114,11 @@ function Task(props: Props) {
           </div>
         </div>
         <div className={styles.options}>
-          <IconButton onClick={handleEditClick}>
-            <EditIcon />
+          <IconButton color="inherit" onClick={handleEditClick}>
+            <EditIcon color="action" />
           </IconButton>
-          <IconButton onClick={handleDeleteClick}>
-            <DeleteIcon />
+          <IconButton color="inherit" onClick={handleDeleteClick}>
+            <DeleteIcon color="action" />
           </IconButton>
         </div>
       </Gestures>

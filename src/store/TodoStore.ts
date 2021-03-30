@@ -9,11 +9,17 @@ export interface TodoTask {
 }
 
 class TodoStore {
+  theme: "light" | "dark" = "light";
+
   todos: TodoTask[] = [];
   selectedTodo: TodoTask | null = null;
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  toggleTheme(theme: "light" | "dark") {
+    this.theme = theme;
   }
 
   setSelectedTodo(todo: TodoTask | null) {
