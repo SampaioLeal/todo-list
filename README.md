@@ -4,6 +4,8 @@
 
 - This is a project created to teach some concepts and ways to make a simple TODO app with strategies like localStorage sync, web gestures and the distribution of PWA with React.
 
+**Demo**: https://todolist-lyart.vercel.app/
+
 ## Tech and Tools
 
 - ReactJS
